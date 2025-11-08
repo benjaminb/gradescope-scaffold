@@ -22,6 +22,28 @@ Features:
 
 ## Usage
 
+### Project Structure
+
+```
+your-course-or-project/
+├── .dockerignore (optional)
+├── .env (optional)
+├── .gitignore (optional)
+├── Dockerfile
+├── common/
+│   ├── source/
+│   │   ├── requirements.txt
+│   │   └── run_tests.py
+│   └── tests/
+│       └── <supporting dirs/files for all assignments>
+├── hw1/
+│   ├── test*.py
+│   └── <hw1-specific supporting dirs/files>
+└── hw2/
+    ├── test*.py
+    └── <hw2-specific supporting dirs/files>
+```
+
 ### Building and Deploying the Docker Image
 
 1. Create a folder for your assignment in the project root (e.g., `hw1`)
@@ -29,10 +51,11 @@ Features:
 1. In `common/source/`, add any files that you'll want placed in all assignments' `source/` directories (e.g. `requirements.txt`)
 1. In `common/tests/`, add any support files you'll want placed adjacent to all assignments' tests, such as supporting data files or helper modules.
 1. Make sure the following files are present in the project root:
+
    - `Dockerfile`
    - `.env` (optional: for any environment variables you want passed into the image, such as API keys)
    - `.dockerignore` (optional: describes files to exclude from the image Docker will build)
-1. Run the following command to build the Docker image, replacing `hw1` with your assignment's folder name and `your-image-name` with your desired image name:
+     Run the following command to build the Docker image, replacing `hw1` with your assignment's folder name and `your-image-name` with your desired image name:
 
    ```sh
    docker build \
