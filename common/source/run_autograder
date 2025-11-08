@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Adapted from Gradescop codebase
+echo "Running autograder.."
+
+if [ -f /autograder/.env ]; then
+  echo "Sourcing environment variables from .env file..."
+  source /autograder/.env
+fi
+
+# Set up autograder files
+
+# flatten subdirectories in submission
+find /autograder/submission/ -mindepth 2 -type f -exec mv -f '{}' /autograder/submission/ ';'
+
+cp /autograder/source/run_tests.py /autograder/submission/
+
+cp -r /autograder/source/tests /autograder/submission/
+
+cd /autograder/submission
+
+mkdir -p /autograder/results
+
+# Print header first
+echo "====================="
+echo "Running" $(python --version)
+echo "run_autograder.sh last modified $(stat -c %y /autograder/source/run_autograder)"
+echo "====================="
+
+# Run tests and try to use jq for formatting, fall back to raw output if it fails
+python3 run_tests.py > /autograder/results/results.json.tmp && \
+if command -v jq >/dev/null 2>&1; then
+    jq '.' /autograder/results/results.json.tmp > /autograder/results/results.json || \
+    cp /autograder/results/results.json.tmp /autograder/results/results.json
+else
+    cp /autograder/results/results.json.tmp /autograder/results/results.json
+fi
+rm -f /autograder/results/results.json.tmp
+
+
