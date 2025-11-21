@@ -96,8 +96,3 @@ When time permits, I'll be adding the following features from my private codebas
 
 - A script to automate building images
 - Support for sample assignments and a script to run the autograders against them locally
-- A helper module providing classes and functions that help analyze code submissions:
-  - Validating presence and signatures of required functions
-  - Providing stdin and capturing stdout for testing interactive programs
-  - Capturing the AST for static analysis of student code
-  - LLM-calling functions
