@@ -9,9 +9,19 @@ I encountered two main challenges while building out CS1's codebase, which this 
 1. Most students are using the current version of Python (3.13 as of late 2025) but Gradescope runs in Python 3.10 by default. This causes even some simple programs to fail due to features in newer Python versions, such as quotes in f-strings and how dict keys get ordered.
 1. Developing and validating tests should happen in the same environment in which the tests will run, which requires using Gradescope's autograder base image. To use this correctly (and with Python 3.13) takes a lot of setup.
 
-## The Solution
+## Solutions
 
-This project provides a highly efficient `Dockerfile` that builds assignments with Python 3.13, pulling assignment files from a simple, easy-to-manage folder structure.
+1. A highly efficient Dockerfile that builds Gradescope autograders running Python 3.13
+1. Two classes to simplify writing tests:
+
+- `CS1TestCase`: extends `unittest.TestCase` to allow defining logic that should run on all submissions, e.g. submission has correct filename or required functions
+- `CS1Submission`: represents a student submission and provides methods to inspect student code, including:
+  - Invoking student-defined functions with specified arguments or `stdin`
+  - Capturing or suppressing stdout/stderr
+  - Inspecting the AST
+  - Invoking LLMs to provide additional feedback
+
+### Dockerfile
 
 Features:
 
@@ -19,6 +29,10 @@ Features:
 1. Provides a `Dockerfile` that efficiently builds custom autograder images: rarely changing layers (common files) build before frequently changing layers (assignment-specific files) so rebuilds are typically very fast
 1. Allows you to easily create assignment autograders, manage test files, and add supporting data files
 1. Allows you to easily manage common support files shared across all assignments
+
+### Custom Classes
+
+You'll find the custom classes in `common/tests/cs1_submission.py`.
 
 ## Usage
 
@@ -30,11 +44,12 @@ your-course-or-project/
 ├── .env (optional)
 ├── .gitignore (optional)
 ├── Dockerfile
-├── common/
+├── common/ # files common to all assignments' tests
 │   ├── source/
 │   │   ├── requirements.txt
 │   │   └── run_tests.py
 │   └── tests/
+│   │   ├── cs1_submission.py
 │       └── <supporting dirs/files for all assignments>
 ├── hw1/
 │   ├── test*.py
